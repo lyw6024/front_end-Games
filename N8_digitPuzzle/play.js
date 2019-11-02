@@ -129,41 +129,80 @@ function fly(k)
 	
 
 }
+function moveUp()
+{
+	p=a.indexOf(0);
+	x=p%ORDER;
+	y=Math.floor(p/ORDER);
+	if(y-1>=0 && ORDER*(y-1)+x>=0)
+		y-=1;
+	q=ORDER*y+x;
+
+	tmp=a[p];
+	a[p]=a[q];
+	a[q]=tmp;
+}
+function moveDown()
+{
+	p=a.indexOf(0);
+	x=p%ORDER;
+	y=Math.floor(p/ORDER);
+	if(y+1<ORDER && ORDER*(y+1)+x<N)
+		y+=1;
+	q=ORDER*y+x;
+
+	tmp=a[p];
+	a[p]=a[q];
+	a[q]=tmp;
+}
+function moveLeft()
+{
+	p=a.indexOf(0);
+	x=p%ORDER;
+	y=Math.floor(p/ORDER);
+	if(x-1>=0 && ORDER*(y)+(x-1)>=0)
+		x-=1;
+	q=ORDER*y+x;
+
+	tmp=a[p];
+	a[p]=a[q];
+	a[q]=tmp;
+}
+function moveRight()
+{
+	p=a.indexOf(0);
+	x=p%ORDER;
+	y=Math.floor(p/ORDER);
+	if(x+1<ORDER && ORDER*y+(x+1)<N)
+		x+=1;
+	q=ORDER*y+x;
+
+	tmp=a[p];
+	a[p]=a[q];
+	a[q]=tmp;
+}
 
 function getKey()
 {
 	if(!winFlag)
 	{
-		p=a.indexOf(0);
-		x=p%ORDER;
-		y=Math.floor(p/ORDER);
 		var k=event.keyCode;
 		if(k==68) //d
 		{
-			if(x+1<ORDER && ORDER*y+(x+1)<N)
-				x+=1;
+			moveRight();
 		}
 		else if(k==65) //a
 		{
-			if(x-1>=0 && ORDER*(y)+(x-1)>=0)
-				x-=1;
+			moveLeft();
 		}
 		else if(k==87) //w
 		{
-			if(y-1>=0 && ORDER*(y-1)+x>=0)
-				y-=1;
+			moveUp();
 		}
 		else if(k==83) //s
 		{
-			if(y+1<ORDER && ORDER*(y+1)+x<N)
-				y+=1;
+			moveDown();
 		}
-		
-		q=ORDER*y+x;
-
-		tmp=a[p];
-		a[p]=a[q];
-		a[q]=tmp;
 		drawToTable(a);
 		if(judge(a)==true)
 			winState();
@@ -172,12 +211,9 @@ function getKey()
 
 function becomeWinState()
 {
+    document.getElementById("btn").innerText="计算中";
     document.getElementById("btn").disabled=true;
-	for(i=1;i<=N;i++)
-		a[i-1]=i;
-	a[N-1]=0;
-	drawToTable(a);
-	winState();
+    setTimeout("autoSolve()",1);
 }
 
 
