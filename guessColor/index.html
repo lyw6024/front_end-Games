@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<title>Guess</title>
+<style>
+	table
+	{
+		margin : 0 auto;
+	}
+	table td
+	{
+		width:  20px;
+		height: 20px;
+		text-align: center;
+	}
+	
+	.scoreBoard
+	{
+		background-color: #FFC;
+		text-align: center;
+	}
+
+	</style>
+ <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>	
+</head>
+<body>
+
+	<button id="init" onclick="init()">init</button>
+<table id="mainPanel" border="2">
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard" style="width:80px;"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
+</table>
+<table id="resTable" border="2">
+<td  contenteditable class="droppable"></td>
+<td  contenteditable class="droppable"></td>
+<td  contenteditable class="droppable"></td>
+<td  contenteditable class="droppable"></td>
+<td onclick="onJudge()">TEST</td>
+</table>
+
+<table border="2" >
+<tr>
+<td class="draggable">1</td>
+<td class="draggable">2</td>
+<td class="draggable">3</td>
+<td class="draggable">4</td>
+<td class="draggable">5</td>
+<td class="draggable">6</td>
+</tr>
+</table>
+
+
+</body>
+<script>
+$(document).ready(function(){
+$( ".draggable" ).draggable({ revert: true });
+$(".droppable").droppable({
+  drop: function(event,ui) {
+    this.innerHTML=ui.draggable.html();
+  }
+});
+});
+
+
+
+var index=0;
+var gameResult=new Array(Math.ceil(6*Math.random()),Math.ceil(6*Math.random()),Math.ceil(6*Math.random()),Math.ceil(6*Math.random()));
+var totalTimes=document.getElementById('mainPanel').children[0].children.length;
+
+function init()
+{
+	for(var j=0;j<totalTimes;j++)
+	{
+		for(var i=0;i<5;i++)
+		{
+			document.getElementsByTagName('table')[0].children[0].children[j].children[i].innerHTML="";
+			if(i<4)
+				document.getElementsByTagName('table')[0].children[0].children[j].children[i].style.backgroundColor="#FFF";
+		}
+	}
+	for(var i=0;i<4;i++)
+	{
+		document.getElementById('resTable').children[0].children[0].children[i].innerHTML="";
+	}	
+	index=0;
+	gameResult=new Array(Math.ceil(6*Math.random()),Math.ceil(6*Math.random()),Math.ceil(6*Math.random()),Math.ceil(6*Math.random()));	
+	document.getElementById("judge").disabled=false;
+}
+function winState()
+{
+for(var j=0;j<index;j++)
+	{
+		for(var i=0;i<4;i++)
+		{
+			document.getElementsByTagName('table')[0].children[0].children[j].children[i].style.backgroundColor="#4F4";
+		}
+	}
+	for(var i=0;i<4;i++)
+	{
+		document.getElementById('resTable').children[0].children[0].children[i].innerHTML=gameResult[i];
+	}	
+}
+function loseState()
+{
+
+	for(var j=0;j<totalTimes;j++)
+	{
+		for(var i=0;i<4;i++)
+		{
+			document.getElementsByTagName('table')[0].children[0].children[j].children[i].style.backgroundColor="#F44";
+		}
+	}
+
+	for(var i=0;i<4;i++)
+	{
+		document.getElementById('resTable').children[0].children[0].children[i].innerHTML=gameResult[i];
+	}	
+}
+function onJudge()
+{
+
+	number=document.getElementsByClassName('droppable');
+	currNum=new Array(number[0].innerHTML,number[1].innerHTML,number[2].innerHTML,number[3].innerHTML);
+	includesNum=judgeInclude(currNum,gameResult);
+	posCorrectNum=judgePosition(currNum,gameResult);
+
+	for(var i=0;i<4;i++)
+	{
+		document.getElementsByTagName('table')[0].children[0].children[index].children[i].innerHTML=currNum[i];
+	}
+	resMsg=""+(includesNum-posCorrectNum)+"/"+(posCorrectNum);
+	document.getElementsByTagName('table')[0].children[0].children[index].children[4].innerHTML=resMsg;
+	index+=1;
+	if(posCorrectNum==4)
+	{
+		winState();
+		document.getElementById("judge").disabled=true;
+	}
+	else if(index==totalTimes)
+	{
+		loseState();
+		document.getElementById("judge").disabled=true;
+	}
+}
+
+function judgeInclude(curr,res)
+{
+	var i,j,count=0;
+	bucketCurr=new Array(0,0,0,0,0,0,0);
+	bucketRes=new  Array(0,0,0,0,0,0,0);
+	for(i=0;i<4;i++)
+	{
+		bucketCurr[curr[i]]++;
+		bucketRes[res[i]]++;
+	}
+
+	for(i=1;i<=6;i++)
+	{
+		count+=Math.min(bucketRes[i],bucketCurr[i]);
+	}
+	return count;
+}
+function judgePosition(curr,res)
+{
+	var i,count=0;
+	for(i=0;i<4;i++)
+	{
+		if(curr[i]==res[i])
+			count+=1;
+	}
+	return count;
+
+}
+
+</script>
+</body>
+</html>

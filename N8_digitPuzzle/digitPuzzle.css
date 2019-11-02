@@ -1,0 +1,25 @@
+div#headNav
+{
+	margin:20px auto;
+	text-align: center;
+}
+table#gamePanel
+{
+	margin:0 auto;
+}
+td
+{
+	width:80px;
+	height: 80px;
+	text-align: center;
+	font-size:xx-large;
+}
+				
+a:link 
+{ text-decoration: none;color: blue}
+a:active 
+{ text-decoration:blink}
+a:hover 
+{ text-decoration:underline;color: red} 
+a:visited 
+{ text-decoration: none;color: green}

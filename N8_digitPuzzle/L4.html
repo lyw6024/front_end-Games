@@ -1,0 +1,69 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link type="text/css" rel="stylesheet" href="digitPuzzle.css">
+</head>
+
+<body onkeydown="getKey()">
+
+<div id="headNav">
+	<a href="index.html"> 3阶</a>&nbsp;&nbsp;
+	<a href="L4.html" style="color:#C1F"> 4阶</a>&nbsp;&nbsp;
+	<a href="L5.html"> 5阶</a>&nbsp;&nbsp;
+	<a href="L6.html"> 6阶</a>&nbsp;&nbsp;
+	<button id="btn" onclick="becomeWinState()">不想玩，直接看特效</button>
+</div>
+
+</body>	
+
+<script type="text/javascript">
+
+var canvas = document.createElement( 'canvas' );
+canvas.style.position = 'absolute';
+canvas.width = window.innerWidth-20;
+canvas.height = window.innerHeight-100;
+document.body.appendChild( canvas );
+
+var ctx = canvas.getContext( '2d' );
+
+var startX,startY,currX,currY;
+var blockWidth,blockHeight,gap;
+var ORDER,N;
+var a=new Array();
+var winFlag=false;
+
+startX=Math.floor(canvas.width/2)-167;
+startY=80;
+blockHeight=80;
+blockWidth=80;
+gap=5;
+
+ORDER=4;
+N=ORDER*ORDER;
+
+function initState()
+{
+
+	var i;
+	for(i=1;i<N;i++)
+		a.push(i);
+	shuffle(a);
+	a.push(0);
+	
+	if((inversions(a)%2)==0)
+	{
+		tmp=a[0];
+		a[0]=a[1];
+		a[1]=tmp;
+	}
+
+	drawToTable(a);
+}
+
+</script>
+<script src="play.js"></script>
+</html>

@@ -1,0 +1,101 @@
+body {margin:0pt;}
+body,td,.plain {font-family:arial,sans-serif; color:#222222; font-size:9pt;}
+.tm {margin-top: 8pt; margin-bottom:0;}
+table,td {padding:0pt;}
+.stat {color:#990000; font-size:10pt; font-weight:bold;}
+.reset {font-size:8pt; color:#990000;}
+input.reset {border:solid 1px; background-color:transparent; padding:0pt;}
+
+a:link,a:active,a:visited {color:#3333FF; text-decoration:none;}
+a:hover {text-decoration:underline;}
+
+.d0,.d1,.d2,.d3,.s0,.s1,.s2,.s3,.u0,.u1,.u2,.u3,.w0,.w1,.w2,.w3,.v0,.v1,.v2,.v3 {-webkit-appearance: none; outline:none; border: solid 0 #fff; text-align:center; margin:0; width:24pt;}
+.s0,.s1,.s2,.s3 {font-size:18pt; font-family:times,"times new roman",serif; color:#000000;}
+.u0,.u1,.u2,.u3 {font-size:28pt; font-family:times,"times new roman",serif; color:#000000;}
+.d0,.d1,.d2,.d3 {font-size:16pt; font-family:"lucida handwriting","comic sans ms",cursive; color:#7777DD;}
+.w0,.w1,.w2,.w3 {font-size:10pt; font-family:"lucida handwriting","comic sans ms",cursive; color:#338833;}
+.v0::-ms-clear, v1::-ms-clear, v2::-ms-clear, v3::-ms-clear {
+    display: none;
+}
+.v0,.v1,.v2,.v3 {font-size:7pt; font-family:"lucida handwriting","comic sans ms",cursive; color:#338833;}
+
+.d0,.s0,.u0,.w0,.v0 {background-color: transparent;}
+
+.d1,.s1,.u1,.w1,.v1,.c1,.e1,.f1,.g1,.h1,.i1,.j1,.k1,.l1,.m1,.n1,.p1,.q1,.r1 {background-color: #FFBFBF;}
+.d2,.s2,.u2,.w2,.v2,.c2,.e2,.f2,.g2,.h2,.i2,.j2,.k2,.l2,.m2,.n2,.p2,.q2,.r2 {background-color: #FF7F7F;}
+.d3,.s3,.u3,.w3,.v3,.c3,.e3,.f3,.g3,.h3,.i3,.j3,.k3,.l3,.m3,.n3,.p3,.q3,.r3 {background-color: #FF3F3F;}
+
+.c0,.c1,.c2,.c3,.e0,.e1,.e2,.e3,.f0,.f1,.f2,.f3,.g0,.g1,.g2,.g3,.h0,.h1,.h2,.h3,.i0,.i1,.i2,.i3 {width:24pt; height:25pt; vertical-align:middle; text-align:center; font-size:18pt; font-family:times,serif;}
+.j0,.j1,.j2,.j3,.k0,.k1,.k2,.k3,.l0,.l1,.l2,.l3,.m0,.m1,.m2,.m3 {width:32pt; height:32pt; vertical-align:middle; text-align:center; font-size:18pt; font-family:times,serif;}
+.n0,.n1,.n2,.n3,.p0,.p1,.p2,.p3,.q0,.q1,.q2,.q3,.r0,.r1,.r2,.r3 {width:44pt; height:44pt; vertical-align:middle; text-align:center; font-size:28pt; font-family:times,serif;}
+
+.t {border-collapse:collapse; background-color:#FFFFFF; border-right: #666699 solid 2px;}
+.c0,.e0,.f0,.g0,.h0,.i0 {border-left: #DDDDEE solid 1px; border-top: #DDDDEE solid 1px;}
+.c1,.e1,.f1,.g1,.h1,.i1 {border-left: #FFBFBF solid 1px; border-top: #FFBFBF solid 1px;}
+.c2,.e2,.f2,.g2,.h2,.i2 {border-left: #FF7F7F solid 1px; border-top: #FF7F7F solid 1px;}
+.c3,.e3,.f3,.g3,.h3,.i3 {border-left: #FF3F3F solid 1px; border-top: #FF3F3F solid 1px;}
+.e0,.e1,.e2,.e3,.g0,.g1,.g2,.g3,.i0,.i1,.i2,.i3 {border-left: #666699 solid 2px;}
+.f0,.f1,.f2,.f3,.g0,.g1,.g2,.g3 {border-top: #666699 solid 2px;}
+.h0,.h1,.h2,.h3,.i0,.i1,.i2,.i3 {border-bottom: #666699 solid 2px;}
+
+.i {border-collapse:collapse; border: #000000 solid 2px;}
+.j0,.j1,.j2,.j3,.k0,.k1,.k2,.k3,.l0,.l1,.l2,.l3,.m0,.m1,.m2,.m3 {border: #000000 solid 1px;}
+.k0,.k1,.k2,.k3,.m0,.m1,.m2,.m3 {border-left: #000000 solid 2px;}
+.l0,.l1,.l2,.l3,.m0,.m1,.m2,.m3 {border-top: #000000 solid 2px;}
+
+.o {border-collapse:collapse; border: #000000 solid 4px;}
+.n0,.n1,.n2,.n3,.p0,.p1,.p2,.p3,.q0,.q1,.q2,.q3,.r0,.r1,.r2,.r3 {border: #000000 solid 2px;}
+.p0,.p1,.p2,.p3,.r0,.r1,.r2,.r3 {border-left: #000000 solid 4px;}
+.q0,.q1,.q2,.q3,.r0,.r1,.r2,.r3 {border-top: #000000 solid 4px;}
+
+.tk {width:24pt; height:24pt; text-align:center; vertical-align:middle; border:1px solid #DDDDEE; border-left: #666699 solid 2px; border-right: #666699 solid 2px; background-color:#fff;}
+
+#overlay {z-index:2; background-color:rgba(0, 0, 0, 0.8); position:fixed; width:100%; height:auto; top:0; left:0; text-align:center;}
+
+#side_keys {position:fixed; right:16px; top:0; height:100%;}
+
+@media (max-width: 680px) {
+    #left-column, #separator {
+        display:none;
+    }
+
+    .tk {width:16pt; height:17pt;}
+}
+
+@media (max-width: 380px) {
+    #side_keys, #puzzle_grid {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    #side_keys {
+        position: relative;
+        right: -5px;
+    }
+
+    .s0,.s1,.s2,.s3 {width:19pt; font-size:13pt;} /* givens */
+    .d0,.d1,.d2,.d3 {width:19pt; font-size:13pt;} /* variables */
+    .c0,.c1,.c2,.c3,.e0,.e1,.e2,.e3,.f0,.f1,.f2,.f3,.g0,.g1,.g2,.g3,.h0,.h1,.h2,.h3,.i0,.i1,.i2,.i3 {width:19pt; height:20pt;} /* cells */
+
+    .w0,.w1,.w2,.w3 {width:19pt; font-size:9pt;}
+    .v0,.v1,.v2,.v3 {width:19pt; font-size:7pt;}
+
+    #side_keys_help {display:none;}
+
+}
+
+@media screen and (min-width:1400px) and (min-height:800px) {
+
+    .s0,.s1,.s2,.s3 {width:30pt; font-size:22pt;} /* givens */
+    .d0,.d1,.d2,.d3 {width:30pt; font-size:20pt;} /* variables */
+    .c0,.c1,.c2,.c3,.e0,.e1,.e2,.e3,.f0,.f1,.f2,.f3,.g0,.g1,.g2,.g3,.h0,.h1,.h2,.h3,.i0,.i1,.i2,.i3 {width:30pt; height:31pt} /* cells */
+    .w0,.w1,.w2,.w3 {width:30pt; font-size:12pt;}
+    .v0,.v1,.v2,.v3 {width:30pt; font-size:8pt;}
+    #message {font-size:16pt;}
+
+}
+
+
+
+
+/* The CSS code in this document are copyright. Infringers of copyright will be prosecuted. */
