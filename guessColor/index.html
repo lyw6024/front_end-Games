@@ -42,6 +42,8 @@ var holeValue = [-1,-1,-1,-1];
 var holeXPosition=[62,109,158,205,252,298,346,394];
 var holeYPosition=[117,152,187,225,73];
 
+var gameRound = 0,okButton;
+
 pinNames = ["bluePin","redPin","greenPin","yellowPin","pinkPin","grayPin"];
 
 
@@ -54,11 +56,14 @@ function setup()
 	backgroundImage.height = app.view.height;
 	app.stage.addChild(backgroundImage);
 
+
+
 	id = PIXI.loader.resources["src/guessColorSources.json"].textures;
+
 	for(i=0;i<4;i++)
 	{
 		obj = new Sprite(id["activeHole"]);
-		obj.x = holeXPosition[0];
+		obj.x = holeXPosition[gameRound];
 		obj.y = holeYPosition[i];
 		obj.width = 2;
 		obj.height=2;
@@ -85,9 +90,40 @@ function setup()
 	}
 
 	
+	okButton = new Sprite(id["buttonOK"]);
+	okButton.anchor.set(0.5,0.5);
+	okButton.width=36;
+	okButton.height=36;
+	okButton.x = holeXPosition[gameRound];
+	okButton.y=holeYPosition[4];
+	okButton.visible = false;
+	okButton.interactive = true;
+	okButton.on("pointerup",checkGameState);
+
+	app.stage.addChild(okButton);
+	
 	app.ticker.add(delta => mainLoop(delta));
 
 	window.addEventListener('click',whereClick);
+}
+
+function checkGameState()
+{
+	nextRound();
+}
+
+function nextRound()
+{
+	gameRound+=1;
+	okButton.x = holeXPosition[gameRound];
+	okButton.visible=false;
+	for(i=0;i<4;i++)
+	{
+		holeObj[i].texture = id["activeHole"];
+		holeValue[i]=-1;
+		holeObj[i].x=holeXPosition[gameRound];
+		holeObj[i].y=holeYPosition[i];
+	}
 }
 
 function whereClick(event)
@@ -109,7 +145,7 @@ function mainLoop(delta)
 				holeObj[i].alpha=0.6;
 				holeObj[i].width =22;
 				holeObj[i].height=22;
-				holeObj[i].x = holeXPosition[0]-10;
+				holeObj[i].x = holeXPosition[gameRound]-10;
 				holeObj[i].y = holeYPosition[i]-10;
 				targetHoleIdx=i;
 			}
@@ -120,7 +156,7 @@ function mainLoop(delta)
 					holeObj[i].alpha=1;
 					holeObj[i].width =2;
 					holeObj[i].height=2;
-					holeObj[i].x = holeXPosition[0];
+					holeObj[i].x = holeXPosition[gameRound];
 					holeObj[i].y = holeYPosition[i];
 				}
 				else
@@ -174,6 +210,19 @@ function onDragEnd(event) {
 		if(hitTestRectangle(movingPin,holeObj[targetHoleIdx]))
 		{
 			holeValue[targetHoleIdx] = movingPin.value;
+			checkFlag = true;
+			for(i=0;i<4;i++)
+			{
+				if(holeValue[i]==-1)
+				{
+					checkFlag=false;
+					break;
+				}
+			}
+			if(checkFlag)
+			{
+				okButton.visible = true;
+			}
 		}
 	}
 	this.position.set(startPosition.x,startPosition.y);

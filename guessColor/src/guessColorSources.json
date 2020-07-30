@@ -27,7 +27,20 @@
 "activeHole":
 {
 	"frame":{"x":248,"y":5,"w":5,"h":5}
+},
+"buttonOK":
+{
+	"frame":{"x":264,"y":2,"w":56,"h":56}
+},
+"fullRight":
+{
+	"frame":{"x":333,"y":5,"w":32,"h":32}
+},
+"halfRight":
+{
+	"frame":{"x":372,"y":8,"w":26,"h":26}
 }
+
 
 },
 "meta": {
@@ -35,7 +48,7 @@
 	"version": "1.0",
 	"image": "guessColorSources.png",
 	"format": "RGBA8888",
-	"size": {"w":379,"h":285},
+	"size": {"w":417,"h":63},
 	"scale": "1",
 	"smartupdate": "$TexturePacker:SmartUpdate:52586866875309c357a59ef94cc3e344:67b70cfeefc06c04b551ab33c8f1fc7a:b00d48b51f56eb7c81e25100fcce2828$"
 }
