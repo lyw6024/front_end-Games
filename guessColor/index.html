@@ -38,11 +38,17 @@ var bluePin,redPin,greenPin,yellowPin,pinkPin,grayPin;
 var pinObj = [bluePin,redPin,greenPin,yellowPin,pinkPin,grayPin];
 var holeObj=[];
 var holeValue = [-1,-1,-1,-1];
+var gameTarget=[randomInt(0,5),randomInt(0,5),randomInt(0,5),randomInt(0,5)];
 
 var holeXPosition=[62,109,158,205,252,298,346,394];
 var holeYPosition=[117,152,187,225,73];
 
 var gameRound = 0,okButton;
+
+var pinSize = 26;
+var holeSize = 2;
+var ButtonSize = 36;
+var bigRightPin = 15,smallRightPin=12,rightPinBias=7;
 
 pinNames = ["bluePin","redPin","greenPin","yellowPin","pinkPin","grayPin"];
 
@@ -65,8 +71,8 @@ function setup()
 		obj = new Sprite(id["activeHole"]);
 		obj.x = holeXPosition[gameRound];
 		obj.y = holeYPosition[i];
-		obj.width = 2;
-		obj.height=2;
+		obj.width = holeSize;
+		obj.height=holeSize;
 		obj.value = -1;
 		app.stage.addChild(obj);
 		holeObj.push(obj);
@@ -75,8 +81,8 @@ function setup()
 	for(i=0;i<6;i++)
 	{
 		pinObj[i] = new Sprite(id[pinNames[i]]);
-		pinObj[i].width = 28;
-		pinObj[i].height=28;
+		pinObj[i].width = pinSize;
+		pinObj[i].height=pinSize;
 		pinObj[i].x = 150+i*(185-150);
 		pinObj[i].y = 258;
 		pinObj[i].interactive = true;
@@ -92,8 +98,8 @@ function setup()
 	
 	okButton = new Sprite(id["buttonOK"]);
 	okButton.anchor.set(0.5,0.5);
-	okButton.width=36;
-	okButton.height=36;
+	okButton.width=ButtonSize;
+	okButton.height=ButtonSize;
 	okButton.x = holeXPosition[gameRound];
 	okButton.y=holeYPosition[4];
 	okButton.visible = false;
@@ -109,14 +115,112 @@ function setup()
 
 function checkGameState()
 {
-	nextRound();
+	okButton.visible=false;
+	checkRes=[];
+	for(i=0;i<4;i++)
+	{
+		checkRes.push(gameTarget[i]);
+	}
+
+	fullRight = 0;
+	for(i=0;i<4;i++)
+	{
+		if(checkRes[i]==holeValue[i])
+		{
+			checkRes[i]=-1;
+			fullRight+=1;
+		}
+	}
+	halfRight = 0;
+	for(i=0;i<4;i++)
+	{
+		t = checkRes.indexOf(holeValue[i]);
+		if(t>-1)
+		{
+			checkRes[t]=-1;
+			halfRight+=1;
+		}
+	}
+	setIdx=0;
+	setPos=[[-1,-1],[-1,1],[1,-1],[1,1]];
+	while(setIdx<fullRight)
+	{
+		obj = new Sprite(id["fullRight"]);
+		obj.x= holeXPosition[gameRound] + setPos[setIdx][0]*rightPinBias;
+		obj.y= holeYPosition[4] + setPos[setIdx][1]*rightPinBias;
+		obj.anchor.set(0.5,0.5);
+		obj.width = bigRightPin;
+		obj.height=bigRightPin;
+		app.stage.addChild(obj);
+		setIdx+=1;
+	}
+	while(setIdx-fullRight<halfRight)
+	{
+		obj = new Sprite(id["halfRight"]);
+		obj.x= holeXPosition[gameRound] + setPos[setIdx][0]*rightPinBias;
+		obj.y= holeYPosition[4] + setPos[setIdx][1]*rightPinBias;
+		obj.anchor.set(0.5,0.5);
+		obj.width = smallRightPin;
+		obj.height=smallRightPin;
+		app.stage.addChild(obj);
+		setIdx+=1
+	}
+	if(fullRight==4)
+	{
+		winGame();
+	}
+	else if(gameRound==7)
+	{
+		endGame();
+	}
+	else
+	{
+		nextRound();
+	}
+}
+
+function winGame()
+{
+	showResult();
+	alert("WIN");
+}
+
+function endgame()
+{
+	showResult();
+	alert("GAME OVER");
+}
+
+function showResult()
+{
+	winSlotXPosition=449;
+	for(i=0;i<4;i++)
+	{
+		obj = new Sprite(id[pinNames[gameTarget[i]]]);
+		obj.anchor.set(0.5,0.5);
+		obj.x = winSlotXPosition;
+		obj.y = holeYPosition[i];
+		obj.width = pinSize*1.2;
+		obj.height = pinSize*1.2;
+		app.stage.addChild(obj);
+	}
 }
 
 function nextRound()
 {
+	for(i=0;i<4;i++)
+	{
+		obj = new Sprite(id[pinNames[holeValue[i]]]);
+		obj.x=holeXPosition[gameRound]-(pinSize-holeSize)/2;
+		obj.y=holeYPosition[i]-(pinSize-holeSize)/2;
+		obj.width = pinSize;
+		obj.height=pinSize;
+		app.stage.addChild(obj);
+	}
+
 	gameRound+=1;
 	okButton.x = holeXPosition[gameRound];
-	okButton.visible=false;
+	
 	for(i=0;i<4;i++)
 	{
 		holeObj[i].texture = id["activeHole"];
@@ -143,10 +247,10 @@ function mainLoop(delta)
 			{
 				holeObj[i].texture = movingPin.texture;
 				holeObj[i].alpha=0.6;
-				holeObj[i].width =22;
-				holeObj[i].height=22;
-				holeObj[i].x = holeXPosition[gameRound]-10;
-				holeObj[i].y = holeYPosition[i]-10;
+				holeObj[i].width =pinSize;
+				holeObj[i].height=pinSize;
+				holeObj[i].x = holeXPosition[gameRound]-(pinSize-holeSize)/2;
+				holeObj[i].y = holeYPosition[i]-(pinSize-holeSize)/2;
 				targetHoleIdx=i;
 			}
 			else{
@@ -154,8 +258,8 @@ function mainLoop(delta)
 				{
 					holeObj[i].texture = id["activeHole"];
 					holeObj[i].alpha=1;
-					holeObj[i].width =2;
-					holeObj[i].height=2;
+					holeObj[i].width =holeSize;
+					holeObj[i].height=holeSize;
 					holeObj[i].x = holeXPosition[gameRound];
 					holeObj[i].y = holeYPosition[i];
 				}
@@ -163,8 +267,8 @@ function mainLoop(delta)
 				{
 					holeObj[i].texture = id[pinNames[holeValue[i]]];
 					holeObj[i].alpha=1;
-					holeObj[i].width =22;
-					holeObj[i].height=22;					
+					holeObj[i].width =pinSize;
+					holeObj[i].height=pinSize;					
 				}
 			}
 		}
@@ -177,15 +281,15 @@ function mainLoop(delta)
 				{
 					holeObj[i].texture = id["activeHole"];
 					holeObj[i].alpha=1;
-					holeObj[i].width =2;
-					holeObj[i].height=2;
+					holeObj[i].width =holeSize;
+					holeObj[i].height=holeSize;
 				}
 				else
 				{
 					holeObj[i].texture = id[pinNames[holeValue[i]]];
 					holeObj[i].alpha=1;
-					holeObj[i].width =22;
-					holeObj[i].height=22;					
+					holeObj[i].width =pinSize;
+					holeObj[i].height=pinSize;					
 				}
 				
 			}
@@ -299,7 +403,12 @@ function hitTestRectangle(r1, r2) {
 
   //`hit` will be either `true` or `false`
   return hit;
-};
+}
+
+function randomInt(min, max) {
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 </script>
 
