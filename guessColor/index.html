@@ -101,8 +101,28 @@ function mainLoop(delta)
 				holeObj[i].height=22;
 				targetHoleIdx=i;
 			}
-			else
-			{
+			else{
+			if(holeValue[i]==-1)
+				{
+					holeObj[i].texture = id["activeHole"];
+					holeObj[i].alpha=1;
+					holeObj[i].width =1;
+					holeObj[i].height=1;
+				}
+				else
+				{
+					holeObj[i].texture = id[pinNames[holeValue[i]]];
+					holeObj[i].alpha=1;
+					holeObj[i].width =22;
+					holeObj[i].height=22;					
+				}
+			}
+		}
+	}
+	else
+	{
+		for(i=0;i<4;i++)
+		{
 				if(holeValue[i]==-1)
 				{
 					holeObj[i].texture = id["activeHole"];
@@ -120,7 +140,6 @@ function mainLoop(delta)
 				
 			}
 		}
-	}
 }
 
 var startPosition;
