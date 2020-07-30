@@ -33,7 +33,14 @@ loader
   .add("src/guessColorSources.json")
   .load(setup);
 
+
+var bluePin,redPin,greenPin,yellowPin,pinkPin,grayPin;
+var pinObj = [bluePin,redPin,greenPin,yellowPin,pinkPin,grayPin];
+var holeObj=[];
+var holeValue = [-1,-1,-1,-1];
+
 pinNames = ["bluePin","redPin","greenPin","yellowPin","pinkPin","grayPin"];
+
 
 function setup()
 {
@@ -44,45 +51,173 @@ function setup()
 	backgroundImage.height = app.view.height;
 	app.stage.addChild(backgroundImage);
 
-	let id = PIXI.loader.resources["src/guessColorSources.json"].textures;
-
+	id = PIXI.loader.resources["src/guessColorSources.json"].textures;
+	for(i=0;i<4;i++)
+	{
+		obj = new Sprite(id["activeHole"]);
+		obj.x = 52;
+		obj.y = 110+i*35;
+		obj.width = 1;
+		obj.height=1;
+		obj.value = -1;
+		app.stage.addChild(obj);
+		holeObj.push(obj);
+	}
 
 	for(i=0;i<6;i++)
 	{
-		obj = new Sprite(id[pinNames[i]]);
-		obj.width = 28;
-		obj.height=28;
-		obj.x = 150+i*(185-150);
-		obj.y = 258;
-		obj.interactive = true;
-		obj.on('pointerdown', onDragStart)
+		pinObj[i] = new Sprite(id[pinNames[i]]);
+		pinObj[i].width = 28;
+		pinObj[i].height=28;
+		pinObj[i].x = 150+i*(185-150);
+		pinObj[i].y = 258;
+		pinObj[i].interactive = true;
+		pinObj[i].value = i;
+		
+		pinObj[i].on('pointerdown', onDragStart)
 	   		.on('pointerup', onDragEnd)
 	   		.on('pointerupoutside', onDragEnd)
 	   		.on('pointermove', onDragMove);
-		app.stage.addChild(obj);
+		app.stage.addChild(pinObj[i]);
 	}
 
+	
+	app.ticker.add(delta => mainLoop(delta));
 }
+
+var targetHoleIdx,movingPin;
+
+function mainLoop(delta)
+{
+	if(movingPin!=null)
+	{
+		for(i=0;i<4;i++)
+		{
+			if(hitTestRectangle(movingPin,holeObj[i]))
+			{
+				holeObj[i].texture = movingPin.texture;
+				holeObj[i].alpha=0.6;
+				holeObj[i].width =22;
+				holeObj[i].height=22;
+				targetHoleIdx=i;
+			}
+			else
+			{
+				if(holeValue[i]==-1)
+				{
+					holeObj[i].texture = id["activeHole"];
+					holeObj[i].alpha=1;
+					holeObj[i].width =1;
+					holeObj[i].height=1;
+				}
+				else
+				{
+					holeObj[i].texture = id[pinNames[holeValue[i]]];
+					holeObj[i].alpha=1;
+					holeObj[i].width =22;
+					holeObj[i].height=22;					
+				}
+				
+			}
+		}
+	}
+}
+
+var startPosition;
 
 function onDragStart(event) {
 	this.data = event.data;
-	this.alpha = 0.5;
+	startPosition = {x:this.position.x,y:this.position.y};
+	
+	this.alpha = 0.7;
 	this.dragging = true;
 }
  
 function onDragEnd(event) {
+	
+	if(holeObj[targetHoleIdx]!=null)
+	{
+		holeObj[targetHoleIdx].alpha=1;
+		if(hitTestRectangle(movingPin,holeObj[targetHoleIdx]))
+		{
+			holeValue[targetHoleIdx] = movingPin.value;
+		}
+	}
+	this.position.set(startPosition.x,startPosition.y);
 	this.alpha = 1;
 	this.dragging = false;
 	this.data = null;
+	movingPin=null;
 }
  
 function onDragMove(event) {
 	if(this.dragging) {
+		
+		movingPin = {
+			x:this.x,
+			y:this.y,
+			width:this.width,
+			height:this.height,
+			texture:this.texture,
+			value:this.value
+		};
+
 		var newPosition = this.data.getLocalPosition(this.parent); //获取鼠标移动的位置
-		this.position.x = newPosition.x-this.width/2;
-		this.position.y = newPosition.y-this.height/2;
+		this.position.x = newPosition.x-this.width/2 ;
+		this.position.y = newPosition.y-this.height/2; 
 	}
 }
+
+function hitTestRectangle(r1, r2) {
+
+  //Define the variables we'll need to calculate
+  let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+
+  //hit will determine whether there's a collision
+  hit = false;
+
+  //Find the center points of each sprite
+  r1.centerX = r1.x + r1.width / 2;
+  r1.centerY = r1.y + r1.height / 2;
+  r2.centerX = r2.x + r2.width / 2;
+  r2.centerY = r2.y + r2.height / 2;
+
+  //Find the half-widths and half-heights of each sprite
+  r1.halfWidth = r1.width / 2;
+  r1.halfHeight = r1.height / 2;
+  r2.halfWidth = r2.width / 2;
+  r2.halfHeight = r2.height / 2;
+
+  //Calculate the distance vector between the sprites
+  vx = r1.centerX - r2.centerX;
+  vy = r1.centerY - r2.centerY;
+
+  //Figure out the combined half-widths and half-heights
+  combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+  combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+  //Check for a collision on the x axis
+  if (Math.abs(vx) < combinedHalfWidths) {
+
+    //A collision might be occuring. Check for a collision on the y axis
+    if (Math.abs(vy) < combinedHalfHeights) {
+
+      //There's definitely a collision happening
+      hit = true;
+    } else {
+
+      //There's no collision on the y axis
+      hit = false;
+    }
+  } else {
+
+    //There's no collision on the x axis
+    hit = false;
+  }
+
+  //`hit` will be either `true` or `false`
+  return hit;
+};
 
 </script>
 
