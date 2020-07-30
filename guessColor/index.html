@@ -39,6 +39,9 @@ var pinObj = [bluePin,redPin,greenPin,yellowPin,pinkPin,grayPin];
 var holeObj=[];
 var holeValue = [-1,-1,-1,-1];
 
+var holeXPosition=[62,109,158,205,252,298,346,394];
+var holeYPosition=[117,152,187,225,73];
+
 pinNames = ["bluePin","redPin","greenPin","yellowPin","pinkPin","grayPin"];
 
 
@@ -55,10 +58,10 @@ function setup()
 	for(i=0;i<4;i++)
 	{
 		obj = new Sprite(id["activeHole"]);
-		obj.x = 52;
-		obj.y = 110+i*35;
-		obj.width = 1;
-		obj.height=1;
+		obj.x = holeXPosition[0];
+		obj.y = holeYPosition[i];
+		obj.width = 2;
+		obj.height=2;
 		obj.value = -1;
 		app.stage.addChild(obj);
 		holeObj.push(obj);
@@ -72,8 +75,8 @@ function setup()
 		pinObj[i].x = 150+i*(185-150);
 		pinObj[i].y = 258;
 		pinObj[i].interactive = true;
-		pinObj[i].value = i;
-		
+		pinObj[i].value = i;		
+
 		pinObj[i].on('pointerdown', onDragStart)
 	   		.on('pointerup', onDragEnd)
 	   		.on('pointerupoutside', onDragEnd)
@@ -83,6 +86,13 @@ function setup()
 
 	
 	app.ticker.add(delta => mainLoop(delta));
+
+	window.addEventListener('click',whereClick);
+}
+
+function whereClick(event)
+{
+	console.log("("+event.layerX+","+event.layerY+")");
 }
 
 var targetHoleIdx,movingPin;
@@ -99,6 +109,8 @@ function mainLoop(delta)
 				holeObj[i].alpha=0.6;
 				holeObj[i].width =22;
 				holeObj[i].height=22;
+				holeObj[i].x = holeXPosition[0]-10;
+				holeObj[i].y = holeYPosition[i]-10;
 				targetHoleIdx=i;
 			}
 			else{
@@ -106,8 +118,10 @@ function mainLoop(delta)
 				{
 					holeObj[i].texture = id["activeHole"];
 					holeObj[i].alpha=1;
-					holeObj[i].width =1;
-					holeObj[i].height=1;
+					holeObj[i].width =2;
+					holeObj[i].height=2;
+					holeObj[i].x = holeXPosition[0];
+					holeObj[i].y = holeYPosition[i];
 				}
 				else
 				{
@@ -127,8 +141,8 @@ function mainLoop(delta)
 				{
 					holeObj[i].texture = id["activeHole"];
 					holeObj[i].alpha=1;
-					holeObj[i].width =1;
-					holeObj[i].height=1;
+					holeObj[i].width =2;
+					holeObj[i].height=2;
 				}
 				else
 				{
