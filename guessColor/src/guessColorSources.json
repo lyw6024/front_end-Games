@@ -1,0 +1,38 @@
+{"frames": {
+
+"bluePin":
+{
+	"frame": {"x":0,"y":0,"w":39,"h":39}
+},
+"redPin":
+{
+	"frame": {"x":42,"y":0,"w":39,"h":39}
+},
+"greenPin":
+{
+	"frame": {"x":85,"y":0,"w":39,"h":39}
+},
+"yellowPin":
+{
+	"frame": {"x":125,"y":0,"w":39,"h":39}
+},
+"pinkPin":
+{
+	"frame": {"x":164,"y":0,"w":39,"h":39}
+},
+"grayPin":
+{
+	"frame": {"x":205,"y":0,"w":39,"h":39}
+}
+
+},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "guessColorSources.png",
+	"format": "RGBA8888",
+	"size": {"w":379,"h":285},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:52586866875309c357a59ef94cc3e344:67b70cfeefc06c04b551ab33c8f1fc7a:b00d48b51f56eb7c81e25100fcce2828$"
+}
+}

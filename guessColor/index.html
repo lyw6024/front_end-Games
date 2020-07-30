@@ -1,189 +1,92 @@
 <!DOCTYPE HTML>
+
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="UTF-8">
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-<title>Guess</title>
-<style>
-	table
-	{
-		margin : 0 auto;
-	}
-	table td
-	{
-		width:  20px;
-		height: 20px;
-		text-align: center;
-	}
-	
-	.scoreBoard
-	{
-		background-color: #FFC;
-		text-align: center;
-	}
-
-	</style>
- <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>	
+	<meta charset="utf-8">
+	<title>猜颜色</title>
+	<script type="text/javascript" src="pixi.min.js"></script>
 </head>
 <body>
 
-	<button id="init" onclick="init()">init</button>
-<table id="mainPanel" border="2">
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard" style="width:80px;"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-<tr><td></td><td></td><td></td><td></td> <td class="scoreBoard"></td></tr>
-</table>
-<table id="resTable" border="2">
-<td  contenteditable class="droppable"></td>
-<td  contenteditable class="droppable"></td>
-<td  contenteditable class="droppable"></td>
-<td  contenteditable class="droppable"></td>
-<td onclick="onJudge()">TEST</td>
-</table>
+<script type="text/javascript">
 
-<table border="2" >
-<tr>
-<td class="draggable">1</td>
-<td class="draggable">2</td>
-<td class="draggable">3</td>
-<td class="draggable">4</td>
-<td class="draggable">5</td>
-<td class="draggable">6</td>
-</tr>
-</table>
+let Application = PIXI.Application,
+    loader = PIXI.loader,
+    resources = PIXI.loader.resources,
+    TextureCache = PIXI.utils.TextureCache,
+    Sprite = PIXI.Sprite;	
 
-
-</body>
-<script>
-$(document).ready(function(){
-$( ".draggable" ).draggable({ revert: true });
-$(".droppable").droppable({
-  drop: function(event,ui) {
-    this.innerHTML=ui.draggable.html();
+	let app = new PIXI.Application({ 
+    width: 500, 
+    height: 300,                       
+    antialiasing: true, 
+    transparent: false, 
+    resolution: 1
   }
-});
-});
+);
+	document.body.appendChild(app.view);
 
+var id;
 
+loader
+  .add("src/2020073012594000-79127164CA4A94F74187421B24A3AA8D.jpg")
+  .add("src/guessColorSources.json")
+  .load(setup);
 
-var index=0;
-var gameResult=new Array(Math.ceil(6*Math.random()),Math.ceil(6*Math.random()),Math.ceil(6*Math.random()),Math.ceil(6*Math.random()));
-var totalTimes=document.getElementById('mainPanel').children[0].children.length;
+pinNames = ["bluePin","redPin","greenPin","yellowPin","pinkPin","grayPin"];
 
-function init()
+function setup()
 {
-	for(var j=0;j<totalTimes;j++)
-	{
-		for(var i=0;i<5;i++)
-		{
-			document.getElementsByTagName('table')[0].children[0].children[j].children[i].innerHTML="";
-			if(i<4)
-				document.getElementsByTagName('table')[0].children[0].children[j].children[i].style.backgroundColor="#FFF";
-		}
-	}
-	for(var i=0;i<4;i++)
-	{
-		document.getElementById('resTable').children[0].children[0].children[i].innerHTML="";
-	}	
-	index=0;
-	gameResult=new Array(Math.ceil(6*Math.random()),Math.ceil(6*Math.random()),Math.ceil(6*Math.random()),Math.ceil(6*Math.random()));	
-	document.getElementById("judge").disabled=false;
-}
-function winState()
-{
-for(var j=0;j<index;j++)
-	{
-		for(var i=0;i<4;i++)
-		{
-			document.getElementsByTagName('table')[0].children[0].children[j].children[i].style.backgroundColor="#4F4";
-		}
-	}
-	for(var i=0;i<4;i++)
-	{
-		document.getElementById('resTable').children[0].children[0].children[i].innerHTML=gameResult[i];
-	}	
-}
-function loseState()
-{
+	backgroundTexture = TextureCache["src/2020073012594000-79127164CA4A94F74187421B24A3AA8D.jpg"];
+	
+	backgroundImage = new Sprite(backgroundTexture);
+	backgroundImage.width = app.view.width;
+	backgroundImage.height = app.view.height;
+	app.stage.addChild(backgroundImage);
 
-	for(var j=0;j<totalTimes;j++)
+	let id = PIXI.loader.resources["src/guessColorSources.json"].textures;
+
+
+	for(i=0;i<6;i++)
 	{
-		for(var i=0;i<4;i++)
-		{
-			document.getElementsByTagName('table')[0].children[0].children[j].children[i].style.backgroundColor="#F44";
-		}
+		obj = new Sprite(id[pinNames[i]]);
+		obj.width = 28;
+		obj.height=28;
+		obj.x = 150+i*(185-150);
+		obj.y = 258;
+		obj.interactive = true;
+		obj.on('pointerdown', onDragStart)
+	   		.on('pointerup', onDragEnd)
+	   		.on('pointerupoutside', onDragEnd)
+	   		.on('pointermove', onDragMove);
+		app.stage.addChild(obj);
 	}
 
-	for(var i=0;i<4;i++)
-	{
-		document.getElementById('resTable').children[0].children[0].children[i].innerHTML=gameResult[i];
-	}	
-}
-function onJudge()
-{
-
-	number=document.getElementsByClassName('droppable');
-	currNum=new Array(number[0].innerHTML,number[1].innerHTML,number[2].innerHTML,number[3].innerHTML);
-	includesNum=judgeInclude(currNum,gameResult);
-	posCorrectNum=judgePosition(currNum,gameResult);
-
-	for(var i=0;i<4;i++)
-	{
-		document.getElementsByTagName('table')[0].children[0].children[index].children[i].innerHTML=currNum[i];
-	}
-	resMsg=""+(includesNum-posCorrectNum)+"/"+(posCorrectNum);
-	document.getElementsByTagName('table')[0].children[0].children[index].children[4].innerHTML=resMsg;
-	index+=1;
-	if(posCorrectNum==4)
-	{
-		winState();
-		document.getElementById("judge").disabled=true;
-	}
-	else if(index==totalTimes)
-	{
-		loseState();
-		document.getElementById("judge").disabled=true;
-	}
 }
 
-function judgeInclude(curr,res)
-{
-	var i,j,count=0;
-	bucketCurr=new Array(0,0,0,0,0,0,0);
-	bucketRes=new  Array(0,0,0,0,0,0,0);
-	for(i=0;i<4;i++)
-	{
-		bucketCurr[curr[i]]++;
-		bucketRes[res[i]]++;
-	}
-
-	for(i=1;i<=6;i++)
-	{
-		count+=Math.min(bucketRes[i],bucketCurr[i]);
-	}
-	return count;
+function onDragStart(event) {
+	this.data = event.data;
+	this.alpha = 0.5;
+	this.dragging = true;
 }
-function judgePosition(curr,res)
-{
-	var i,count=0;
-	for(i=0;i<4;i++)
-	{
-		if(curr[i]==res[i])
-			count+=1;
+ 
+function onDragEnd(event) {
+	this.alpha = 1;
+	this.dragging = false;
+	this.data = null;
+}
+ 
+function onDragMove(event) {
+	if(this.dragging) {
+		var newPosition = this.data.getLocalPosition(this.parent); //获取鼠标移动的位置
+		this.position.x = newPosition.x-this.width/2;
+		this.position.y = newPosition.y-this.height/2;
 	}
-	return count;
-
 }
 
 </script>
+
 </body>
+
 </html>
+
